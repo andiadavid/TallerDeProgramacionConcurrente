@@ -1,0 +1,70 @@
+programa Areas
+procesos
+  proceso juntarF
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso limAvF
+  comenzar
+    repetir(99)
+      juntarF
+      mover
+    juntarF  
+  fin
+  proceso limpiarF
+  comenzar
+    repetir(24)
+      limAvF
+      Pos(PosAv+1,1)
+    limAvF
+  fin
+  
+  proceso juntarP
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso limAvP
+  comenzar
+    repetir(99)
+      juntarP
+      mover
+    juntarP  
+  fin
+  proceso limpiarP
+  comenzar
+    repetir(24)
+      limAvP
+      Pos(PosAv+1,1)
+    limAvP
+  fin
+areas
+  c1: AreaPC(1,1,25,100)
+  c2: AreaPC(26,1,50,100)
+  c3: AreaPC(51,1,75,100)
+  c4: AreaPC(76,1,100,100)
+robots 
+  robot florero
+  comenzar 
+    limpiarF
+    Pos(51,1)
+    limpiarF
+  fin
+  robot papelero
+  comenzar 
+    limpiarP
+    Pos(76,1)
+    limpiarP
+  fin
+variables
+  r1:florero
+  r2:papelero
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r1,c3)
+  AsignarArea(r2,c2)
+  AsignarArea(r2,c4)
+  Iniciar(r1,1,1)
+  Iniciar(r2,26,1)
+fin

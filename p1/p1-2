@@ -1,0 +1,58 @@
+programa perimetro
+procesos
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso preguntar
+  comenzar 
+    si(PosAv=10)&(PosCa=30)
+      derecha
+    sino 
+      si(PosAv=30)&(PosCa=30)
+        repetir(2)
+          derecha
+      sino 
+        si(PosAv=30)&(PosCa=10)
+          repetir(3)
+            derecha
+  fin
+  proceso recorrer(ES p:numero)
+  comenzar
+    repetir (19)
+      juntarP(p)
+      mover
+    juntarP(p)  
+  fin
+areas
+  c1: AreaP(10,10,10,29)
+  c2: AreaP(10,30,29,30)
+  c3: AreaP(30,11,30,30)
+  c4: AreaP(11,10,30,10)
+robots
+  robot trabajador
+  variables
+    p:numero
+  comenzar
+    p:=0
+    preguntar
+    recorrer(p)
+    Informar(p)      
+  fin
+variables
+  r1:trabajador
+  r2:trabajador
+  r3:trabajador
+  r4:trabajador
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+  Iniciar(r1,10,10)
+  Iniciar(r2,10,30)
+  Iniciar(r3,30,30)
+  Iniciar(r4,30,10)
+fin

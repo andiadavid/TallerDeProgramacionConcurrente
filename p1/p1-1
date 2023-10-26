@@ -1,0 +1,56 @@
+programa RecorrerAv1 
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso depositarF(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+      f:=f-1
+  fin
+  proceso preguntar(ES f:numero;ES v:numero;ES ll:numero)
+  comenzar
+    si(HayFlorEnLaEsquina)
+      juntarF(f)
+      ll:=ll+1
+    sino
+      v:=v+1
+  fin
+areas
+  ciudad: AreaC(1,1,100,100)
+robots
+  robot trabajador
+  variables
+    f:numero
+    v:numero
+    ll:numero
+  comenzar
+    f:=0
+    v:=0
+    ll:=0
+    repetir 99
+      preguntar(f,v,ll)
+      mover
+    preguntar(f,v,ll)
+    Informar(f)
+    Informar(v)
+    Informar(ll)
+    depositarF(f)
+    Informar(f)    
+  fin
+variables
+  t1:trabajador
+  t2:trabajador
+  t3:trabajador
+comenzar
+  AsignarArea(t1,ciudad)
+  AsignarArea(t2,ciudad)
+  AsignarArea(t3,ciudad)
+  Iniciar(t1,1,1)
+  Iniciar(t2,3,1)
+  Iniciar(t3,5,1)
+fin

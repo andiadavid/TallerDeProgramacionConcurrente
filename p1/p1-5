@@ -1,0 +1,79 @@
+programa grupoRobots
+procesos
+  proceso juntarF
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso juntarP
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso preguntar(E ok:boolean)
+  comenzar
+    si(ok)
+      juntarF
+    sino
+      juntarP  
+  fin
+  proceso recorrer(E cam:numero;E ok:boolean)
+  comenzar
+    repetir(cam)
+      preguntar(ok)
+      mover
+    preguntar(ok)    
+  fin
+  proceso direccion(E cam:numero;E ok:boolean)
+  variables
+    AV:numero
+    CA:numero
+  comenzar 
+    AV:=PosAv
+    CA:=PosCa
+    repetir(2)
+      recorrer(cam,ok)
+      si(ok)
+        Pos(AV,PosCa-5)
+      sino
+        Pos(PosAv+5,CA)    
+  fin
+
+areas
+  c1: AreaP(1,70,16,100)
+  c2: AreaP(75,80,100,100)
+  c3: AreaP(70,1,100,15)
+  c4: AreaP(1,1,20,11)
+robots
+  robot trabajador
+  comenzar
+    si((PosAv=1)&(PosCa=80))|((PosAv=70)&(PosCa=15))
+      derecha
+      si(PosAv=1)&(PosCa=80)
+        direccion(15,V)
+      si(PosAv=70)&(PosCa=15)
+        direccion(30,V)  
+    sino 
+      si((PosAv=75)&(PosCa=80))|((PosAv=10)&(PosCa=1))
+        si(PosAv=75)&(PosCa=80)  
+          direccion(20,F)
+        si(PosAv=10)&(PosCa=1)
+          direccion(10,F)
+  fin
+variables
+  r1:trabajador
+  r2:trabajador
+  r3:trabajador
+  r4:trabajador
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+  Iniciar(r1,1,80)
+  Iniciar(r2,75,80)
+  Iniciar(r3,70,15)
+  Iniciar(r4,10,1)
+fin
+
+
