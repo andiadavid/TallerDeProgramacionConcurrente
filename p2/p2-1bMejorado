@@ -1,0 +1,61 @@
+programa competenciaConFiscal
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrer(ES f:numero)
+  comenzar
+    repetir(9)
+      juntarF(f)
+      mover
+    juntarF(f)  
+  fin
+  proceso calcular(ES df:numero;E n1:numero;E n2:numero)
+  comenzar
+    si(n1>=n2)
+      df:=n1-n2
+    sino
+      df:=n2-n1
+  fin
+areas
+  c1: AreaP(1,1,1,10)
+  c2: AreaP(2,11,2,20)
+  c3: AreaP(2,1,2,1)
+robots
+  robot jugador
+  variables 
+    f:numero
+  comenzar 
+    f:=0
+    recorrer(f)
+    EnviarMensaje(f,rf)
+  fin
+  robot fiscal
+  variables 
+    num:numero
+    n1:numero
+    n2:numero
+    dif:numero
+  comenzar 
+    RecibirMensaje(num,*)
+    n1:=num
+    RecibirMensaje(num,*)
+    n2:=num
+    calcular(dif,n1,n2)      
+    Informar(dif)
+  fin
+variables 
+  r1:jugador
+  r2:jugador
+  rf:fiscal
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(rf,c3)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+  Iniciar(rf,2,1)
+fin

@@ -1,0 +1,54 @@
+programa competencia
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrer(ES f:numero)
+  comenzar
+    repetir(9)
+      juntarF(f)
+      mover
+    juntarF(f)  
+  fin
+  proceso preguntar(E f:numero;ES ok:boolean;ES dif:numero)
+  variables
+    cant:numero
+  comenzar
+    si(PosAv=1)&(PosCa=10)
+      EnviarMensaje(f,r2)
+    sino  
+      EnviarMensaje(f,r1)
+    RecibirMensaje(cant,*)
+    si(cant>=f)
+      ok:=V
+      dif:=cant-f            
+  fin
+areas
+  c1: AreaP(1,1,1,10)
+  c2: AreaP(2,11,2,20)
+robots
+  robot jugador
+  variables 
+    f:numero
+    ok:boolean
+    dif:numero
+  comenzar 
+    f:=0
+    ok:=F
+    recorrer(f)
+    preguntar(f,ok,dif)
+    si(ok)
+      Informar(dif)
+  fin
+variables 
+  r1:jugador
+  r2:jugador
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+fin

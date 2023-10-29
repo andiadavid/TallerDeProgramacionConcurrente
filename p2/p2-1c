@@ -1,0 +1,88 @@
+programa competenciaConFiscal
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrer(ES f:numero)
+  comenzar
+    repetir(9)
+      juntarF(f)
+      mover
+    juntarF(f)  
+  fin
+  proceso preguntar(E f:numero)
+  comenzar
+    si(PosAv=1)&(PosCa=10)
+      EnviarMensaje(f,rf)
+    sino  
+      si(PosAv=2)&(PosCa=20)
+        EnviarMensaje(f,rf)
+      sino  
+        si(PosAv=3)&(PosCa=30)
+          EnviarMensaje(f,rf)
+        sino  
+          si(PosAv=4)&(PosCa=40)
+            EnviarMensaje(f,rf)
+          sino  
+            si(PosAv=5)&(PosCa=50)
+              EnviarMensaje(f,rf)
+            sino  
+              si(PosAv=6)&(PosCa=60)
+                EnviarMensaje(f,rf)          
+  fin
+areas
+  c1: AreaP(1,1,1,10)
+  c2: AreaP(2,11,2,20)
+  c3: AreaP(3,21,3,30)
+  c4: AreaP(4,31,4,40)
+  c5: AreaP(5,41,5,50)
+  c6: AreaP(6,51,6,60)
+  cf: AreaP(2,1,2,1)
+robots
+  robot jugador
+  variables 
+    f:numero
+  comenzar 
+    f:=0
+    recorrer(f)
+    preguntar(f)
+  fin
+  robot fiscal
+  variables 
+    max:numero
+    cant:numero
+  comenzar
+    max:=0 
+    repetir(6)
+      RecibirMensaje(cant,*)
+      si(cant>=max)
+        max:=cant  
+    Informar(max)
+  fin
+variables 
+  r1:jugador
+  r2:jugador
+  r3:jugador
+  r4:jugador
+  r5:jugador
+  r6:jugador
+  rf:fiscal
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+  AsignarArea(r5,c5)
+  AsignarArea(r6,c6)
+  AsignarArea(rf,cf)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+  Iniciar(r3,3,21)
+  Iniciar(r4,4,31)
+  Iniciar(r5,5,41)
+  Iniciar(r6,6,51)
+  Iniciar(rf,2,1)
+fin
