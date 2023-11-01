@@ -1,0 +1,91 @@
+programa escalonesconFiscal
+procesos
+  proceso limpiarBolsa
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  proceso izq
+  comenzar
+    repetir(3)
+      derecha
+  fin
+  proceso juntarDep(ES f:numero;ES p:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1   
+  fin
+  proceso escalon(ES f:numero;ES p:numero;E alt:numero)
+  comenzar
+    repetir(alt)
+      mover
+      juntarDep(f,p)
+    derecha
+    mover
+    juntarDep(f,p)
+    izq   
+  fin
+  proceso preguntar(ES cant:numero;E f:numero;E p:numero)
+  comenzar 
+    si(f>p)
+      cant:=cant+1
+  fin
+areas
+  c1: AreaC(2,1,6,21)
+  c2: AreaC(7,1,11,21)
+  c3: AreaC(12,1,16,21)
+  cf: AreaC(1,1,1,1)
+robots
+  robot trabajador
+  variables
+    cant:numero
+    f:numero
+    p:numero
+    alto:numero
+  comenzar
+    cant:=0
+    f:=0
+    p:=0
+    juntarDep(f,p)
+    repetir(4)
+      Random(alto,1,5)
+      escalon(f,p,alto)
+      preguntar(cant,f,p)
+      f:=0
+      p:=0
+      limpiarBolsa
+    Informar(cant)  
+    EnviarMensaje(cant,rf)  
+  fin
+  robot fiscal
+  variables
+    sum:numero
+    cant:numero
+  comenzar
+    sum:=0
+    repetir(3)
+      RecibirMensaje(cant,*)
+      sum:=sum+cant
+    Informar(sum)  
+  fin
+variables
+  r1:trabajador
+  r2:trabajador
+  r3:trabajador
+  rf:fiscal
+comenzar
+  AsignarArea(rf,cf)
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  Iniciar(rf,1,1)
+  Iniciar(r1,2,1)
+  Iniciar(r2,7,1)
+  Iniciar(r3,12,1)
+fin

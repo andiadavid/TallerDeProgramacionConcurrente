@@ -1,0 +1,105 @@
+programa competenciaConFiscalyID
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrer(ES f:numero)
+  comenzar
+    repetir(9)
+      juntarF(f)
+      mover
+    juntarF(f)  
+  fin
+  proceso enviarID
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+    EnviarMensaje(5,r5)
+    EnviarMensaje(6,r6)
+  fin
+  proceso preguntarQuien(E ID:numero;ES cant:numero)
+  comenzar
+    si(ID=1)
+      RecibirMensaje(cant,r1)
+    sino
+      si(ID=2)
+        RecibirMensaje(cant,r2)
+      sino
+        si(ID=3)
+          RecibirMensaje(cant,r3)
+        sino
+          si(ID=4)
+            RecibirMensaje(cant,r4)
+          sino
+            si(ID=5)
+              RecibirMensaje(cant,r5)
+            sino
+              si(ID=6)
+                RecibirMensaje(cant,r6)
+  fin
+areas
+  c1: AreaP(1,1,1,10)
+  c2: AreaP(2,11,2,20)
+  c3: AreaP(3,21,3,30)
+  c4: AreaP(4,31,4,40)
+  c5: AreaP(5,41,5,50)
+  c6: AreaP(6,51,6,60)
+  cf: AreaP(2,1,2,1)
+robots
+  robot jugador
+  variables 
+    f:numero
+    id:numero
+  comenzar 
+    RecibirMensaje(id,rf)
+    f:=0
+    recorrer(f)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(f,rf)
+  fin
+  robot fiscal
+  variables 
+    max:numero
+    IDmax:numero
+    cant:numero
+    ID:numero
+  comenzar
+    enviarID
+    max:=0 
+    repetir(6)
+      RecibirMensaje(ID,*)
+      preguntarQuien(ID,cant)
+      si(cant>=max)
+        max:=cant
+        IDmax:=ID  
+    Informar(IDmax)
+  fin
+variables 
+  r1:jugador
+  r2:jugador
+  r3:jugador
+  r4:jugador
+  r5:jugador
+  r6:jugador
+  rf:fiscal
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+  AsignarArea(r5,c5)
+  AsignarArea(r6,c6)
+  AsignarArea(rf,cf)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,11)
+  Iniciar(r3,3,21)
+  Iniciar(r4,4,31)
+  Iniciar(r5,5,41)
+  Iniciar(r6,6,51)
+  Iniciar(rf,2,1)
+fin
