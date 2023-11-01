@@ -1,54 +1,44 @@
 programa accesoArea
 procesos 
-  proceso juntar
+  proceso juntar(ES t:numero) 
   comenzar 
     mientras(HayFlorEnLaEsquina)
       tomarFlor
+      t:=t+1
     mientras(HayPapelEnLaEsquina)
-      tomarPapel  
+      tomarPapel
+      t:=t+1  
   fin
   proceso enviar(E rob:numero;ES c1:numero;ES c2:numero;ES c3:numero;ES c4:numero)
   comenzar
     si(rob=1)
       EnviarMensaje(1,r1)
-      c1:=c1+1
-      RecibirMensaje(,r1)
     sino
       si(rob=2)
         EnviarMensaje(2,r2)
-        c2:=c2+1
       sino
         si(rob=3)
           EnviarMensaje(3,r3)
-          c3:=c3+1
         sino
           si(rob=4)
             EnviarMensaje(4,r4)
-            c4:=c4+1      
   fin 
 
 areas
-  cuadrado:AreaPC(25,25,75,75)
+  areaRestringida:AreaPC(25,25,75,75)
   cComp:AreaPC(25,1,40,1)
   cf:AreaP(1,1,1,1)
 robots
   robot trabajador
-
+  variables
+    id:numero
   robot fiscal  
   variables
-    ct1:numero
-    ct2:numero
-    ct3:numero
-    ct4:numero
     rob:numero
   comenzar
-    ct1:=0
-    ct2:=0
-    ct3:=0
-    ct4:=0
     repetir(10)
       Random(rob,1,4)
-      enviar(rob,ct1,ct2,ct3,ct4)
+      enviar(rob)
       
 
   fin
@@ -62,13 +52,13 @@ variables
 comenzar
   AsignarArea(rf,cf)
   AsignarArea(r1,cComp)
-  AsignarArea(r1,cuadrado)
+  AsignarArea(r1,areaRestringida)
   AsignarArea(r2,cComp)
-  AsignarArea(r2,cuadrado)
+  AsignarArea(r2,areaRestringida)
   AsignarArea(r3,cComp)
-  AsignarArea(r3,cuadrado)
+  AsignarArea(r3,areaRestringida)
   AsignarArea(r4,cComp)
-  AsignarArea(r4,cuadrado)
+  AsignarArea(r4,areaRestringida)
 
   Iniciar(rf,1,1)
   Iniciar(r1,25,1)
