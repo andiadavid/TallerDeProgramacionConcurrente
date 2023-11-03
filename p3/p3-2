@@ -1,0 +1,129 @@
+programa carrera
+procesos
+  proceso girar(E n:numero)
+  comenzar
+    repetir(n)
+      derecha
+  fin
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso escalonF(ES f:numero;E cont:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    repetir(2)
+      juntarF(f)
+      repetir(cont)
+        mover
+      derecha
+      si(cont=1)
+        aux:=aux+1
+      si(aux=1)  
+        BloquearEsquina(16,16)
+    girar(2) 
+  fin
+
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso escalonP(ES p:numero;E cont:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    repetir(2)
+      repetir(cont)
+        mover
+      girar(3)
+      juntarP(p)
+      si(cont=1)
+        aux:=aux+1 
+      si(aux=1)     
+        BloquearEsquina(16,16)
+    girar(2) 
+  fin
+areas
+  comp:AreaC(1,1,40,40)
+robots
+  robot florero
+  variables
+    id:numero
+    f:numero
+    cont:numero
+  comenzar
+    RecibirMensaje(id,rf)
+    f:=0
+    cont:=5
+    repetir(5)
+      escalonF(f,cont)
+      cont:=cont-1
+    EnviarMensaje(id,rf)
+    juntarF(f)
+    girar(3)
+    mover
+    LiberarEsquina(16,16)
+    cont:=2
+    repetir(4)
+      escalonF(f,cont)
+      cont:=cont+1
+    Informar(f)  
+    EnviarMensaje(id,rf)
+  fin
+
+  robot papelero
+  variables
+    id:numero
+    p:numero
+    cont:numero
+  comenzar
+    RecibirMensaje(id,rf)
+    p:=0
+    cont:=5
+    repetir(5)
+      escalonP(p,cont)
+      cont:=cont-1
+    EnviarMensaje(id,rf)
+    juntarP(p)
+    derecha
+    mover
+    LiberarEsquina(16,16)
+    cont:=2
+    repetir(4)
+      escalonP(p,cont)
+      cont:=cont+1
+    Informar(p)  
+    EnviarMensaje(id,rf)
+  fin
+  robot fiscal
+  variables
+    id:numero
+    idGan:numero
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    RecibirMensaje(idGan,*)
+    RecibirMensaje(id,*)
+    RecibirMensaje(id,*)
+    RecibirMensaje(id,*)
+    Informar(idGan)
+  fin
+variables
+  rf:fiscal
+  r1:florero
+  r2:papelero
+comenzar
+  AsignarArea(rf,comp)
+  AsignarArea(r1,comp)
+  AsignarArea(r2,comp)
+  Iniciar(rf,15,1)
+  Iniciar(r1,1,1)
+  Iniciar(r2,31,1)
+fin

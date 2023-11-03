@@ -1,0 +1,129 @@
+programa juntarDeEsquina
+procesos
+  proceso iniciarRobot
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)    
+  fin
+  proceso enviarEsq(E A:numero;E C:numero)
+  comenzar
+    EnviarMensaje(A,r1)
+    EnviarMensaje(C,r1)
+    EnviarMensaje(A,r2)
+    EnviarMensaje(C,r2)
+    EnviarMensaje(A,r3)
+    EnviarMensaje(C,r3)
+    EnviarMensaje(A,r4)
+    EnviarMensaje(C,r4)
+  fin
+  proceso maximo(E id:numero;E cant:numero;ES idMax:numero;ES max:numero)
+  comenzar
+    si(cant>max)
+      max:=cant
+      idMax:=id
+  fin
+  proceso recibirYDeterminar(E id:numero;ES idMax:numero)
+  variables
+    cant:numero
+    max:numero
+  comenzar
+    max:=0
+    repetir(4)
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(cant,r1)
+      sino  
+        si(id=2)
+          RecibirMensaje(cant,r2)
+        sino
+          si(id=3)
+            RecibirMensaje(cant,r3)
+          sino
+            si(id=4)
+              RecibirMensaje(cant,r4)
+      maximo(id,cant,idMax,max)
+  fin
+  proceso trabajarEsq(E Av:numero;E Ca:numero;ES ok:boolean;ES f:numero)
+  variables
+    Aini:numero
+    Cini:numero
+  comenzar
+    Aini:=PosAv
+    Cini:=PosCa
+    BloquearEsquina(Av,Ca)
+    Pos(Av,Ca)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    sino
+      ok:=F 
+    Pos(Aini,Cini)
+    LiberarEsquina(Av,Ca)   
+  fin
+areas
+  compartida: AreaPC(2,2,10,10)
+  cf:AreaP(1,1,1,1)
+  c1:AreaP(2,1,2,1)
+  c2:AreaP(3,1,3,1)
+  c3:AreaP(4,1,4,1)
+  c4:AreaP(5,1,5,1)
+robots
+  robot trabajador
+  variables
+    id:numero
+    Av:numero
+    Ca:numero
+    ok:boolean
+    f:numero
+  comenzar
+    RecibirMensaje(id,rf)
+    RecibirMensaje(Av,rf)
+    RecibirMensaje(Ca,rf)
+    f:=0
+    ok:=V
+    mientras(ok)
+      trabajarEsq(Av,Ca,ok,f)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(f,rf)  
+  fin
+
+  robot fiscal
+  variables
+    id:numero
+    A:numero
+    C:numero
+    idMax:numero
+  comenzar
+    iniciarRobot
+    Random(A,2,10)
+    Random(C,2,10)
+    enviarEsq(A,C)
+    recibirYDeterminar(id,idMax)
+    Informar(idMax)
+  fin
+variables
+  rf:fiscal
+  r1:trabajador
+  r2:trabajador
+  r3:trabajador
+  r4:trabajador
+comenzar
+  AsignarArea(rf,cf)
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+  AsignarArea(r1,compartida)
+  AsignarArea(r2,compartida)
+  AsignarArea(r3,compartida)
+  AsignarArea(r4,compartida)
+  Iniciar(rf,1,1)
+  Iniciar(r1,2,1)
+  Iniciar(r2,3,1)
+  Iniciar(r3,4,1)
+  Iniciar(r4,5,1)
+
+fin
+

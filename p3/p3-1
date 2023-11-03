@@ -1,0 +1,125 @@
+programa primerProgMemoriaComp
+procesos
+  proceso juntarF
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso irVolverEsqF(E A:numero;E C:numero)
+  variables
+    Aini:numero
+    Cini:numero
+  comenzar
+    Aini:=PosAv
+    Cini:=PosCa
+    BloquearEsquina(A,C)
+    Pos(A,C)
+    juntarF
+    Pos(Aini,Cini)
+    LiberarEsquina(A,C)    
+  fin
+  proceso trabajarEsq10F
+  variables
+    Aini:numero
+    Cini:numero
+  comenzar
+    Aini:=PosAv
+    Cini:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarFlor
+    Pos(Aini,Cini)
+    LiberarEsquina(10,10)
+  fin
+
+  proceso juntarP
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso irVolverEsqP(E A:numero;E C:numero)
+  variables
+    Aini:numero
+    Cini:numero
+  comenzar
+    Aini:=PosAv
+    Cini:=PosCa
+    BloquearEsquina(A,C)
+    Pos(A,C)
+    juntarP
+    Pos(Aini,Cini)
+    LiberarEsquina(A,C)    
+  fin
+  proceso trabajarEsq10P
+  variables
+    Aini:numero
+    Cini:numero
+  comenzar
+    Aini:=PosAv
+    Cini:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarPapel
+    Pos(Aini,Cini)
+    LiberarEsquina(10,10)
+  fin
+areas
+  areaComp: AreaC(10,10,10,10)
+  areaF: AreaPC(1,1,5,10)
+  areaP: AreaPC(6,1,10,9)
+  cf1: AreaP(6,10,6,10)
+  cf2: AreaP(7,10,7,10)
+  cp1: AreaP(8,10,8,10)
+  cp2: AreaP(9,10,9,10)
+robots
+  robot florero
+  variables
+    A:numero
+    C:numero
+  comenzar
+    A:=PosAv
+    C:=PosCa
+    repetir(5)
+      Random(A,1,5)
+      Random(C,1,10)
+      irVolverEsqF(A,C)
+    mientras(HayFlorEnLaBolsa)
+      trabajarEsq10F
+  fin
+  robot papelero
+  variables
+    A:numero
+    C:numero
+  comenzar
+    A:=PosAv
+    C:=PosCa
+    repetir(3)
+      Random(A,6,10)
+      Random(C,1,9)
+      irVolverEsqP(A,C)
+    mientras(HayPapelEnLaBolsa)
+      trabajarEsq10P
+  fin
+variables
+  f1:florero
+  f2:florero
+  p1:papelero
+  p2:papelero
+comenzar
+  AsignarArea(f1,areaF)
+  AsignarArea(f2,areaF)
+  AsignarArea(p1,areaP)
+  AsignarArea(p2,areaP)
+  AsignarArea(f1,cf1)
+  AsignarArea(f2,cf2)
+  AsignarArea(p1,cp1)
+  AsignarArea(p2,cp2)
+  AsignarArea(f1,areaComp)
+  AsignarArea(f2,areaComp)
+  AsignarArea(p1,areaComp)
+  AsignarArea(p2,areaComp)
+  Iniciar(f1,6,10)
+  Iniciar(f2,7,10)
+  Iniciar(p1,8,10)
+  Iniciar(p2,9,10)
+fin
