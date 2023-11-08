@@ -1,0 +1,101 @@
+programa juntaryLlevar
+procesos
+  proceso irJuntarF11
+  comenzar
+    Pos(11,11)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin    
+  proceso iniciarRobots
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso irEsq10(ES ok:boolean;E Av:numero;E Ca:numero)
+  comenzar  
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+    sino
+      ok:=F
+  fin
+  proceso moverseyLiberar(E Av:numero;E Ca:numero;E n:numero)
+  comenzar
+    Pos(Av,Ca)
+    LiberarEsquina(n,n)
+  fin
+  proceso irEsq11(E Av:numero;E Ca:numero)
+  comenzar
+    BloquearEsquina(11,11)
+    moverseyLiberar(11,11,10){}
+    depositarFlor
+    moverseyLiberar(Av,Ca,11)
+  fin
+areas
+  cf:AreaP(1,1,1,1)
+  c1:AreaP(9,9,9,9)
+  c2:AreaP(9,10,9,10)
+  c3:AreaP(9,11,9,11)
+  c4:AreaP(9,12,9,12)
+  compartida:AreaC(10,10,11,11)
+robots
+  robot trabajador
+  variables
+    id:numero
+    ok:boolean
+    Av:numero
+    Ca:numero
+  comenzar
+    Av:=PosAv
+    Ca:=PosCa
+    ok:=V
+    RecibirMensaje(id,rf)
+    mientras(ok)
+      irEsq10(ok,Av,Ca)
+      si(ok)
+        irEsq11(Av,Ca)
+      sino
+        moverseyLiberar(Av,Ca,10)
+        EnviarMensaje(id,rf)  
+    {Es importante que el mensaje de fin lo envie apenas }
+    {  registra que ya no hay mas flores}
+    {EnviarMensaje(id,rf)}
+  fin
+  robot fiscal
+  variables 
+    idUlt:numero
+  comenzar
+    iniciarRobots
+    repetir(4)
+      RecibirMensaje(idUlt,*)
+    Informar(idUlt)
+    irJuntarF11
+  fin
+variables
+  rf:fiscal
+  r1:trabajador
+  r2:trabajador
+  r3:trabajador
+  r4:trabajador
+comenzar
+  AsignarArea(rf,cf)
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+
+  AsignarArea(rf,compartida)
+  AsignarArea(r1,compartida)
+  AsignarArea(r2,compartida)
+  AsignarArea(r3,compartida)
+  AsignarArea(r4,compartida)
+
+  Iniciar(rf,1,1)
+  Iniciar(r1,9,9)
+  Iniciar(r2,9,10)
+  Iniciar(r3,9,11)
+  Iniciar(r4,9,12)
+fin

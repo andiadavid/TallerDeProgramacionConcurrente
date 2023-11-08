@@ -1,0 +1,125 @@
+programa carrera
+procesos 
+  proceso iniciarRobots
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso buscarPVuelve(ES HayP:boolean;E Av:numero;E Ca:numero) 
+  comenzar
+    BloquearEsquina(11,11)
+    Pos(11,11)
+    si(HayPapelEnLaEsquina)
+      tomarPapel
+    sino
+      HayP:=F  
+    Pos(Av,Ca)
+    LiberarEsquina(11,11)
+  fin
+  proceso recorrerAv
+  variables
+    llegue:boolean
+    HayPapel:boolean
+    Av:numero
+    Ca:numero
+  comenzar
+    llegue:=F
+    HayPapel:=V
+    Av:=PosAv
+    Ca:=PosCa
+    mientras(~(llegue))&(HayPapel)
+      buscarPVuelve(HayPapel,Av,Ca)
+      si(HayPapel)
+        depositarPapel
+        mover
+        si(~(llegue))
+          si(PosCa>99)
+            llegue:=V
+      Av:=PosAv
+      Ca:=PosCa  
+  fin
+  {agrege un determinar y maximo para determinar}
+  {  cual robot llego mas lejos y gano}
+
+  proceso maximo(E id:numero;E calle:numero;ES idMax:numero;ES max:numero)
+  comenzar
+    si(calle>max)
+      max:=calle
+      idMax:=id
+  fin
+  proceso recibirYDeterminar(E id:numero;ES idMax:numero)
+  variables
+    calle:numero
+    max:numero
+  comenzar
+    max:=0
+    repetir(4)
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(calle,r1)
+      sino  
+        si(id=2)
+          RecibirMensaje(calle,r2)
+        sino
+          si(id=3)
+            RecibirMensaje(calle,r3)
+          sino
+            si(id=4)
+              RecibirMensaje(calle,r4)
+      maximo(id,calle,idMax,max)
+  fin
+areas
+  compartido:AreaPC(11,11,11,11)
+  cc:AreaP(2,1,2,1)
+  c1:AreaP(4,1,4,100)
+  c2:AreaP(6,1,6,100)
+  c3:AreaP(8,1,8,100)
+  c4:AreaP(10,1,10,100)
+robots
+  robot corredor
+  variables
+    id:numero
+    Ca:numero
+  comenzar
+    RecibirMensaje(id,rc)
+    recorrerAv
+    EnviarMensaje(id,rc)
+    Ca:=PosCa
+    EnviarMensaje(Ca,rc)
+  fin
+  robot cordinador
+  variables
+    id:numero
+    idMax:numero
+  comenzar
+    iniciarRobots
+    {determino un maximo para la calle recibida}
+    recibirYDeterminar(id,idMax)
+    Informar(idMax)
+  fin
+variables
+  rc:cordinador
+  r1:corredor
+  r2:corredor
+  r3:corredor
+  r4:corredor
+comenzar
+  AsignarArea(rc,cc)
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(r4,c4)
+
+  AsignarArea(r1,compartido)
+  AsignarArea(r2,compartido)
+  AsignarArea(r3,compartido)
+  AsignarArea(r4,compartido)
+
+  Iniciar(rc,2,1)
+  Iniciar(r1,4,1)
+  Iniciar(r2,6,1)
+  Iniciar(r3,8,1)
+  Iniciar(r4,10,1)
+fin
