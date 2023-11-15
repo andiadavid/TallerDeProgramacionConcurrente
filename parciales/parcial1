@@ -1,0 +1,162 @@
+programa cuadrados
+procesos
+  proceso iniciarRobots  
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)    
+  fin
+  proceso mandarLado  
+  variables
+    lado:numero
+  comenzar
+    Random(lado,1,6)    
+    EnviarMensaje(lado,r1)
+    Random(lado,1,6)
+    EnviarMensaje(lado,r2)
+    Random(lado,1,6)
+    EnviarMensaje(lado,r3)
+  fin
+  proceso irBuscarF(E f:numero)   
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir(f)
+      tomarFlor
+    Pos(30,1)
+    LiberarEsquina(50,50)
+  fin
+  proceso maximo(E id:numero;E cant:numero;ES idM:numero;ES Mx:numero)  
+  comenzar
+    si(cant>Mx)
+      idM:=id
+      Mx:=cant
+  fin
+  proceso recibirCantBuscar  
+  variables
+    id:numero
+    cant:numero
+  comenzar
+    repetir(3)
+      repetir(3)
+        RecibirMensaje(id,*)
+        si(id=1)
+          RecibirMensaje(cant,r1)
+          irBuscarF(cant)
+        sino
+          si(id=2)
+            RecibirMensaje(cant,r2)
+            irBuscarF(cant)
+          sino
+            si(id=3)
+              RecibirMensaje(cant,r3)
+              irBuscarF(cant)
+    
+  fin
+  proceso recibirTotal(ES idMax:numero)
+  variables
+    id,cant,max:numero
+  comenzar
+    max:=0
+    repetir(3)
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(cant,r1)
+      sino
+        si(id=2)
+          RecibirMensaje(cant,r2)
+        sino
+          si(id=3)
+            RecibirMensaje(cant,r3)
+      maximo(id,cant,idMax,max)
+  fin
+{-------------------------------------------}
+  proceso juntarF(ES f:numero)  
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso hacerCuadrado(E lado:numero;ES f:numero)  
+  comenzar
+    repetir(4)
+      repetir(lado)
+        juntarF(f)
+        mover
+      derecha
+  fin
+  proceso dep50(E f:numero)
+  variables
+    AvI,CaI:numero
+  comenzar
+    AvI:=PosAv
+    CaI:=PosCa
+    repetir(f)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarFlor
+      Pos(AvI,CaI)
+      LiberarEsquina(50,50)
+  fin
+
+areas
+  c1:AreaP(1,1,9,25)
+  c2:AreaP(10,1,19,25)
+  c3:AreaP(20,1,29,25)
+  cf:AreaP(30,1,30,1)
+  comp:AreaC(50,50,50,50)
+robots
+  robot trabajador 
+  variables
+    id,lado:numero
+    f,fTotal:numero
+    av,ca:numero
+  comenzar
+    fTotal:=0
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(id,rf)
+    RecibirMensaje(lado,rf)
+    repetir(3)
+      f:=0    
+      hacerCuadrado(lado,f)
+      dep50(f)
+      EnviarMensaje(id,rf)
+      EnviarMensaje(f,rf)
+      fTotal:=fTotal+f
+      ca:=ca+lado+1
+      Pos(av,ca)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(fTotal,rf)       
+  fin
+
+  robot fiscal
+  variables
+    idM:numero
+  comenzar
+    iniciarRobots
+    mandarLado
+    recibirCantBuscar
+    recibirTotal(idM)
+    Informar(idM)
+  fin
+
+variables
+  r1:trabajador
+  r2:trabajador
+  r3:trabajador
+  rf:fiscal
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(rf,cf)
+  AsignarArea(r1,comp)
+  AsignarArea(r2,comp)
+  AsignarArea(r3,comp)
+  AsignarArea(rf,comp)
+  Iniciar(r1,1,1)
+  Iniciar(r2,10,1)
+  Iniciar(r3,20,1)
+  Iniciar(rf,30,1)
+fin
