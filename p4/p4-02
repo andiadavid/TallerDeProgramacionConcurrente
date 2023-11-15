@@ -1,0 +1,112 @@
+programa ProductoresConsumidores
+procesos 
+  proceso irDep50Volver(E av:numero;E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir(5)
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+  proceso trabajarEsq(ES cont:numero) 
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cont:=cont+1
+      si(cont=5)
+        irDep50Volver(PosAv,PosCa)
+        cont:=0          
+  fin
+{termino los procesos de productor}
+  proceso depP(E p:numero)
+  comenzar
+    repetir(p)
+      depositarPapel
+  fin
+  proceso verificar(E p:numero;ES ok:boolean)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    mientras(aux<>p)&(HayPapelEnLaEsquina)
+      tomarPapel
+      aux:=aux+1
+    si(aux=p)
+      ok:=V
+    sino
+      ok:=F
+      depP(aux)
+  fin  
+  proceso irEsq50(ES int:numero)
+  variables
+    p:numero
+    AV,CA:numero
+    ok:boolean
+  comenzar
+    AV:=PosAv
+    CA:=PosCa
+    Random(p,2,5)
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    verificar(p,ok)
+    Pos(AV,CA)
+    LiberarEsquina(50,50)
+    si(ok)
+      depP(p)
+    sino
+      int:=int+1
+  fin
+
+areas 
+  cp1:AreaP(5,1,5,100)
+  cp2:AreaP(10,1,10,100)
+  cc1:AreaP(11,1,11,1)
+  cc2:AreaP(12,1,12,1)
+  comp:AreaC(50,50,50,50)
+robots 
+
+  robot productor
+  variables
+    cont:numero
+  comenzar
+    cont:=0
+    repetir(99)
+      trabajarEsq(cont)
+      mover      
+    trabajarEsq(cont)      
+  fin
+
+  robot consumidor
+  variables
+    hayIntentos:boolean
+    int:numero
+  comenzar
+    hayIntentos:=V
+    int:=0
+    mientras(hayIntentos)
+      irEsq50(int)
+      si(int=8)
+        hayIntentos:=F
+  fin
+
+variables
+  p1:productor
+  p2:productor
+  c1:consumidor
+  c2:consumidor
+comenzar
+  AsignarArea(p1,cp1)
+  AsignarArea(p2,cp2)
+  AsignarArea(c1,cc1)
+  AsignarArea(c2,cc2)
+  AsignarArea(p1,comp)
+  AsignarArea(p2,comp)
+  AsignarArea(c1,comp)
+  AsignarArea(c2,comp)
+  Iniciar(p1,5,1)
+  Iniciar(p2,10,1)
+  Iniciar(c1,11,1)
+  Iniciar(c2,12,1)
+
+fin

@@ -1,0 +1,148 @@
+programa intentosArea
+procesos
+  proceso iniciarRobot
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso finalizarRobot
+  comenzar
+    EnviarMensaje(V,r1)
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+  fin
+  
+  proceso calcularMandar(E ro:numero)
+  variables
+    AV:numero
+    CA:numero
+  comenzar
+    Random(AV,40,60)
+    Random(CA,40,60)
+    si(ro=1)
+      EnviarMensaje(F,r1)
+      EnviarMensaje(AV,r1)
+      EnviarMensaje(CA,r1)
+    sino
+      si(ro=2)
+        EnviarMensaje(F,r2)
+        EnviarMensaje(AV,r2)
+        EnviarMensaje(CA,r2)
+      sino
+        si(ro=3)
+          EnviarMensaje(F,r3)
+          EnviarMensaje(AV,r3)
+          EnviarMensaje(CA,r3)
+  fin
+  proceso recibircantF(ES total:numero)
+  variables
+    cant:numero
+  comenzar
+    repetir(3)
+      RecibirMensaje(cant,*)
+      total:=total+cant
+  fin
+  {----------------------------------------------------}
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso depositarF(E f:numero)
+  comenzar
+    repetir(f)
+      depositarFlor
+  fin
+  proceso trabajarEsq(E AV:numero;E CA:numero;ES f:numero)
+  variables
+    AvI:numero
+    CaI:numero
+  comenzar
+    AvI:=PosAv
+    CaI:=PosCa
+    BloquearEsquina(AV,CA)
+    Pos(AV,CA)
+    juntarF(f)
+    Pos(AvI,CaI)
+    LiberarEsquina(AV,CA)
+  fin
+  proceso depositar10(E f:numero)
+  variables
+    AvI:numero
+    CaI:numero
+  comenzar
+    AvI:=PosAv
+    CaI:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarF(f)
+    Pos(AvI,CaI)
+    LiberarEsquina(10,10)
+  fin
+
+areas
+  comp:AreaPC(40,40,60,60)
+  dep:AreaPC(10,10,10,10)
+  c1:AreaP(1,1,1,1)
+  c2:AreaP(2,1,2,1)
+  c3:AreaP(3,1,3,1)
+  cf:AreaP(4,1,4,1)
+robots
+  robot florero
+  variables
+    id:numero
+    termino:boolean
+    AV,CA:numero
+    f:numero
+  comenzar
+    f:=0
+    RecibirMensaje(id,rf)
+    RecibirMensaje(termino,rf){se recibe F=termino, y V cuando termina los intentos}
+    mientras(~termino)
+      RecibirMensaje(AV,rf)
+      RecibirMensaje(CA,rf)
+      trabajarEsq(AV,CA,f)
+      RecibirMensaje(termino,rf)
+    depositar10(f)
+    Informar(f){inf para llevar control del prog} 
+    EnviarMensaje(f,rf)
+
+  fin
+  robot fiscal
+  variables
+    ro,t:numero
+  comenzar
+    iniciarRobot
+    repetir(8)
+      Random(ro,1,3)
+      Informar(ro){inf para llevar control del prog}
+      calcularMandar(ro)
+    finalizarRobot  
+    t:=0
+    recibircantF(t)
+    Informar(t)
+  fin
+  
+variables
+  r1:florero
+  r2:florero
+  r3:florero
+  rf:fiscal
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(rf,cf)
+  AsignarArea(r1,comp)
+  AsignarArea(r2,comp)
+  AsignarArea(r3,comp)
+  AsignarArea(r1,dep)
+  AsignarArea(r2,dep)
+  AsignarArea(r3,dep)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rf,4,1)
+fin

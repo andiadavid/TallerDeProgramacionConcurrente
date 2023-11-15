@@ -1,0 +1,108 @@
+programa servicio 
+procesos
+  proceso juntarPapelesPrueba
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso depositarAle(ES pap:numero)
+  variables
+    AV,CA,p:numero
+  comenzar
+    Random(p,1,5)
+    pap:=p
+    AV:=PosAv
+    CA:=PosCa
+    BloquearEsquina(1,1)
+    Pos(1,1)
+    repetir(p)
+      depositarPapel
+    Pos(AV,CA)
+    LiberarEsquina(1,1)  
+  fin
+  proceso calculaAvisa(E id:numero;E p:numero)
+  comenzar
+    si(id=1)
+      EnviarMensaje(p,r1)
+    sino  
+      si(id=2)
+        EnviarMensaje(p,r2)
+      sino
+        si(id=3)
+          EnviarMensaje(p,r3)
+  fin
+{------------------------------------------}
+  proceso calcularQuien(ES id:numero)
+  comenzar
+    si(PosAv=10)
+      id:=1
+    sino
+      si(PosAv=11)
+        id:=2
+      sino
+        si(PosAv=12)
+          id:=3
+  fin
+  proceso buscarPBloq(E P:numero)
+  variables
+    AV,CA:numero
+  comenzar
+    AV:=PosAv
+    CA:=PosCa
+    BloquearEsquina(1,1)
+    Pos(1,1)
+    tomarPapel
+    Pos(AV,CA)
+    LiberarEsquina(1,1)  
+  fin
+areas
+  c1:AreaP(10,1,10,1)
+  c2:AreaP(11,1,11,1)
+  c3:AreaP(12,1,12,1)
+  cs:AreaP(13,1,13,1)
+  comp:AreaC(1,1,1,1) {def esq1 para visualiarla en el map}{enunciado 100,1}
+
+robots 
+  robot cliente
+  variables
+    id,cantP:numero
+  comenzar
+    calcularQuien(id)
+    repetir(4)
+      EnviarMensaje(id,rf)
+      RecibirMensaje(cantP,rf)
+      repetir(cantP)
+        buscarPBloq(cantP)
+      Informar(cantP){control prog}
+  fin
+  robot servidor
+  variables
+    id,cantP:numero
+  comenzar
+    juntarPapelesPrueba{junto p para poder ejecutar }
+    repetir(12)
+      RecibirMensaje(id,*)
+      Informar(id){control prog}
+      depositarAle(cantP)
+      calculaAvisa(id,cantP)
+  fin
+
+variables
+  r1:cliente
+  r2:cliente
+  r3:cliente
+  rf:servidor
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(rf,cs)
+  AsignarArea(r1,comp)
+  AsignarArea(r2,comp)
+  AsignarArea(r3,comp)
+  AsignarArea(rf,comp)
+  Iniciar(r1,10,1)
+  Iniciar(r2,11,1)
+  Iniciar(r3,12,1)
+  Iniciar(rf,13,1)
+fin

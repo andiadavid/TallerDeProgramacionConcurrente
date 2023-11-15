@@ -1,0 +1,171 @@
+programa competencia
+{Los dos equipos los voy a trabajar con un jefe que va a ser el 
+    f1=id=11 y p1=id=21. los equipos estan divididos en 
+    floreros:11,12 y papeleros:21,22}
+procesos 
+  proceso iniciarRobot
+  comenzar
+    EnviarMensaje(11,f1)
+    EnviarMensaje(12,f2)
+    EnviarMensaje(21,p1)
+    EnviarMensaje(22,p2)
+  fin
+  proceso max(E id:numero;E cant:numero;ES idMax:numero;ES cantMax:numero)
+  comenzar
+    si(cant>cantMax)
+      cantMax:=cant
+      idMax:=id
+  fin
+  proceso recibirMax(ES idM:numero)
+  variables
+    id:numero
+    cant:numero
+    cantMax:numero
+  comenzar
+    cantMax:=0
+    repetir(2)
+      RecibirMensaje(id,*)
+      si(id=11)
+        RecibirMensaje(cant,f1)
+      sino
+        si(id=21)
+          RecibirMensaje(cant,p1)
+      max(id,cant,idM,cantMax)
+  fin
+  {----------------------------------------------------}
+  proceso juntarP(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso primeras3esq(ES p:numero)
+  variables
+    AV:numero
+    CA:numero
+  comenzar
+    CA:=PosCa
+    repetir(3)
+      AV:=PosAv
+      BloquearEsquina(AV+1,CA)
+      juntarP(p)
+      mover
+      LiberarEsquina(AV,CA)
+    LiberarEsquina(PosAv,CA)  
+  fin
+  proceso recorrerCalle(ES p:numero)
+  comenzar
+    primeras3esq(p)
+    repetir(96)
+      juntarP(p)
+      mover
+    juntarP(p)
+  fin
+  {-----------------------------------------------}
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso ultimas3esq(ES f:numero)
+  variables
+    AV:numero
+    CA:numero
+  comenzar
+    AV:=PosAv
+    repetir(3)
+      CA:=PosCa
+      BloquearEsquina(AV,CA+1)
+      juntarF(f)
+      mover
+      LiberarEsquina(AV,CA)
+    LiberarEsquina(AV,PosCa)  
+  fin
+  proceso recorrerAvenida(ES f:numero)
+  comenzar
+    repetir(96)
+      juntarF(f)
+      mover
+    ultimas3esq(f)  
+    juntarF(f)
+  fin
+areas
+  cf1:AreaPC(2,1,2,100)
+  cf2:AreaPC(3,1,3,100)
+  cp1:AreaPC(1,98,100,98)
+  cp2:AreaPC(1,99,100,99)
+  cf:AreaP(1,1,1,1)
+robots 
+  robot florero
+  variables
+    id:numero
+    flo:numero
+    cant:numero
+    total:numero
+  comenzar
+    flo:=0
+    RecibirMensaje(id,rf)
+    recorrerAvenida(flo)
+    si(id=11)
+      RecibirMensaje(cant,f2)
+      total:=flo+cant
+      EnviarMensaje(id,rf)
+      EnviarMensaje(total,rf)
+    sino
+      si(id=12)
+        EnviarMensaje(flo,f1)
+
+  fin
+  robot papelero
+  variables
+    id:numero
+    pap:numero
+    cant:numero
+    total:numero
+  comenzar
+    pap:=0
+    derecha
+    RecibirMensaje(id,rf)
+    recorrerCalle(pap)
+    si(id=21)
+      RecibirMensaje(cant,p2)
+      total:=pap+cant
+      EnviarMensaje(id,rf)
+      EnviarMensaje(total,rf)
+    sino
+      si(id=22)
+        EnviarMensaje(pap,p1)
+
+  fin
+  robot fiscal
+  variables
+    idMax:numero
+  comenzar
+    {le envia 1:floreros (1y2) y 2:papeleros(1y2)}
+    {solo los jefes de cada equipo le regresan el msj a jefe 
+        con las cantidades totales de cada equipo}
+    idMax:=0
+    iniciarRobot
+    recibirMax(idMax)
+    Informar(idMax)      
+  fin
+
+variables
+  f1:florero
+  f2:florero
+  p1:papelero
+  p2:papelero
+  rf:fiscal
+comenzar
+  AsignarArea(f1,cf1)
+  AsignarArea(f2,cf2)
+  AsignarArea(p1,cp1)
+  AsignarArea(p2,cp2)
+  AsignarArea(rf,cf)
+  Iniciar(f1,2,1)
+  Iniciar(f2,3,1)
+  Iniciar(p1,1,98)
+  Iniciar(p2,1,99)
+  Iniciar(rf,1,1)
+fin

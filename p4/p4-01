@@ -1,0 +1,152 @@
+programa clientesServidores
+procesos
+  proceso calcularID(ES id:numero)
+  comenzar
+    si(PosAv=1)
+      id:=1
+    sino
+      si(PosAv=2)
+        id:=2
+      sino
+        si(PosAv=3)
+          id:=3
+  fin
+  proceso irJuntarVolver(E f:numero;E AV:numero;E CA:numero)
+  comenzar
+    Pos(AV,CA)
+    repetir(f)
+      tomarFlor
+    Pos(AV,CA-1)  
+  fin
+  proceso avanzarDep(E f:numero;ES llegue:boolean)
+  comenzar
+    mientras(PosCa<>100)&(f>0)
+      depositarFlor
+      mover
+      f:=f-1
+    si(PosCa=100)
+      llegue:=V
+      si(f>0)
+        depositarFlor
+  fin
+{--------------------------------------}
+  proceso juntarPrueba
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso irDepositarVolver(E f:numero;E Av:numero;E Ca:numero)
+  comenzar
+    BloquearEsquina(Av,Ca)
+    Pos(Av,Ca)
+    repetir(f)
+      depositarFlor
+    Pos(10,10)
+    LiberarEsquina(Av,Ca)  
+  fin
+  proceso recFloresAvSigCalle(E id:numero;ES flo:numero)
+  variables
+    cantF,AV,SCa:numero   
+  comenzar
+    si(id=1)
+      RecibirMensaje(cantF,r1)
+      flo:=cantF
+      si(flo<>0)
+        RecibirMensaje(AV,r1)
+        RecibirMensaje(SCa,r1)
+        irDepositarVolver(flo,AV,SCa)
+        EnviarMensaje(V,r1)  
+    sino
+      si(id=2)
+        RecibirMensaje(cantF,r2)
+        flo:=cantF
+        si(flo<>0)
+          RecibirMensaje(AV,r2)
+          RecibirMensaje(SCa,r2)
+          irDepositarVolver(flo,AV,SCa)
+          EnviarMensaje(V,r2)
+      sino
+        si(id=3)
+          RecibirMensaje(cantF,r3)
+          flo:=cantF
+          si(flo<>0)
+            RecibirMensaje(AV,r3)
+            RecibirMensaje(SCa,r3)
+            irDepositarVolver(flo,AV,SCa)
+            EnviarMensaje(V,r3)
+  fin
+
+areas
+  c1:AreaPC(1,1,1,100)
+  c2:AreaPC(2,1,2,100)
+  c3:AreaPC(3,1,3,100)
+  cf:AreaP(10,10,10,10)
+robots
+
+  robot cliente
+  variables
+    id:numero
+    llegue,listo:boolean
+    cant,sigCalle,av:numero
+  comenzar
+    calcularID(id)
+    llegue:=F
+    mientras(~llegue)
+      EnviarMensaje(id,rf)
+      Random(cant,1,4)
+      EnviarMensaje(cant,rf)
+      av:=PosAv
+      sigCalle:=PosCa+1
+      EnviarMensaje(av,rf)
+      EnviarMensaje(sigCalle,rf)
+      RecibirMensaje(listo,rf)
+
+      irJuntarVolver(cant,av,sigCalle)
+      avanzarDep(cant,llegue)
+
+    {una vez que llegue a 100 aviso que termine }
+    EnviarMensaje(id,rf)
+    EnviarMensaje(0,rf)  
+  fin
+
+  robot fiscal
+  variables
+    id,flo:numero
+    ok:boolean
+    contTer:numero
+  comenzar
+    juntarPrueba
+    contTer:=0
+    ok:=V  
+    mientras(ok)
+      RecibirMensaje(id,*)
+      recFloresAvSigCalle(id,flo)
+      si(flo=0)
+        contTer:=contTer+1
+        si(contTer=3)
+          ok:=F
+  fin
+variables
+  r1:cliente
+  r2:cliente
+  r3:cliente
+  rf:fiscal
+
+comenzar
+  AsignarArea(r1,c1)
+  AsignarArea(r2,c2)
+  AsignarArea(r3,c3)
+  AsignarArea(rf,cf)
+  AsignarArea(rf,c1)
+  AsignarArea(rf,c2)
+  AsignarArea(rf,c3)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rf,10,10)
+
+fin
+
+
+
+
